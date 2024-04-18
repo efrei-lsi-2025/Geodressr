@@ -1,27 +1,22 @@
 package net.efrei.android.geodressr;
 
-import static androidx.core.location.LocationManagerCompat.getCurrentLocation;
-
-import android.Manifest;
-
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.app.ActivityCompat;
 
 import android.annotation.SuppressLint;
+import android.content.Intent;
 import android.content.pm.PackageManager;
-import android.location.Location;
 import android.os.Bundle;
+import android.view.View;
 
 import com.google.android.gms.location.FusedLocationProviderClient;
 import com.google.android.gms.location.LocationServices;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
-import com.google.android.gms.maps.MapFragment;
 import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.SupportMapFragment;
 import com.google.android.gms.maps.model.LatLng;
-import com.google.android.gms.tasks.OnSuccessListener;
 
 public class MainActivity extends AppCompatActivity implements OnMapReadyCallback, ActivityCompat.OnRequestPermissionsResultCallback {
 
@@ -82,5 +77,19 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
                 );
             }
         });
+    }
+
+    public void onDifficultyClick(View view) {
+        Intent intent = new Intent(this, GameLaunch.class);
+
+        if(view.getId() == R.id.facile) {
+            intent.putExtra("gameDifficulty", GameDifficulty.FACILE);
+        } else if (view.getId() == R.id.moyen) {
+            intent.putExtra("gameDifficulty", GameDifficulty.MOYEN);
+        } else if (view.getId() == R.id.difficile) {
+            intent.putExtra("gameDifficulty", GameDifficulty.DIFFICILE);
+        }
+
+        startActivity(intent);
     }
 }
