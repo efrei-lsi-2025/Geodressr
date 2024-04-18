@@ -6,7 +6,8 @@ import android.util.Pair;
 import androidx.annotation.NonNull;
 
 public class GameDifficultyUtils {
-    private GameDifficulty difficulty;
+    private final GameDifficulty difficulty;
+
     public GameDifficultyUtils(GameDifficulty difficulty) {
         this.difficulty = difficulty;
     }
@@ -32,12 +33,12 @@ public class GameDifficultyUtils {
     public Pair<Integer, Integer> getMinMaxRadius() {
         switch (difficulty) {
             case DIFFICILE:
-                return new Pair(500, 1000);
+                return new Pair<>(500, 1000);
             case MOYEN:
-                return new Pair(100, 500);
+                return new Pair<>(100, 500);
             case FACILE:
             default:
-                return new Pair(0, 100);
+                return new Pair<>(0, 100);
         }
     }
 }
