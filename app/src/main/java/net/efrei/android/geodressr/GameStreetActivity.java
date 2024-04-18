@@ -15,7 +15,7 @@ import com.google.android.gms.maps.model.LatLng;
  * Paramètres :
  * - targetCoords : coordonnées GPS de la cible
  */
-public class GameStreet extends AppCompatActivity {
+public class GameStreetActivity extends AppCompatActivity {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {

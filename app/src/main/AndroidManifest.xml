@@ -23,10 +23,10 @@
             android:exported="false" />
 
         <activity
-            android:name=".GamePhoto"
+            android:name=".GamePhotoActivity"
             android:exported="false" />
         <activity
-            android:name=".GameLaunch"
+            android:name=".GameLaunchActivity"
             android:exported="false" />
 
         <meta-data
@@ -43,7 +43,7 @@
             </intent-filter>
         </activity>
 
-        <activity android:name=".GameStreet"
+        <activity android:name=".GameStreetActivity"
             android:exported="true">
             <intent-filter>
                 <action android:name="net.efrei.android.geodressr.GAME" />

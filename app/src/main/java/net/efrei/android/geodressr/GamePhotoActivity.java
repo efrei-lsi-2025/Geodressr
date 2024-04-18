@@ -10,7 +10,7 @@ import android.os.Bundle;
  * Paramètres :
  * - targetCoords : coordonnées GPS de la cible
  */
-public class GamePhoto extends AppCompatActivity {
+public class GamePhotoActivity extends AppCompatActivity {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {

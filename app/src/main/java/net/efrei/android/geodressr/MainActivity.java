@@ -80,7 +80,7 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
     }
 
     public void onDifficultyClick(View view) {
-        Intent intent = new Intent(this, GameLaunch.class);
+        Intent intent = new Intent(this, GameLaunchActivity.class);
 
         if(view.getId() == R.id.facile) {
             intent.putExtra("gameDifficulty", GameDifficulty.FACILE);

@@ -1,38 +1,46 @@
 package net.efrei.android.geodressr;
 
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.core.app.ActivityCompat;
 
 import android.annotation.SuppressLint;
-import android.content.pm.PackageManager;
+import android.content.Intent;
 import android.location.Location;
 import android.os.Bundle;
 import android.util.Pair;
 import android.widget.TextView;
 
 import com.google.android.gms.location.FusedLocationProviderClient;
-import com.google.android.gms.location.LocationRequest;
 import com.google.android.gms.location.LocationServices;
 import com.google.android.gms.location.Priority;
 import com.google.android.gms.tasks.CancellationTokenSource;
-import com.google.android.gms.tasks.OnSuccessListener;
 
 import java.util.Random;
 
 /**
  * Etape 1 du jeu : recherche d'une zone à proximité
- * Une fois la zone trouvée, va démarrer {@link GameStreet} en lui passant les coordonnées en paramètres
+ * Une fois la zone trouvée, va démarrer {@link GameStreetActivity} en lui passant les coordonnées en paramètres
  * Paramètres :
  * - level : facile, moyen, difficile
  */
-public class GameLaunch extends AppCompatActivity {
+public class GameLaunchActivity extends AppCompatActivity {
     private FusedLocationProviderClient fusedLocationClient;
+    private GameDifficulty difficulty;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_game_launch);
+
         fusedLocationClient = LocationServices.getFusedLocationProviderClient(this);
+        setDifficulty();
+        setupLocation();
+    }
+
+    private void setDifficulty() {
+        Intent intent = getIntent();
+        this.difficulty = (GameDifficulty) intent.getSerializableExtra("gameDifficulty");
+        TextView text = findViewById(R.id.gameLaunchingText);
+        text.setText("Recherche d'une zone à proximité... \n Niveau : " + difficulty);
     }
 
     @SuppressLint("MissingPermission")
