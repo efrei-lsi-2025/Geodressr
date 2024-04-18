@@ -6,6 +6,8 @@ import android.annotation.SuppressLint;
 import android.content.Intent;
 import android.location.Location;
 import android.os.Bundle;
+import android.os.Handler;
+import android.os.Looper;
 import android.util.Pair;
 import android.widget.TextView;
 
@@ -39,7 +41,7 @@ public class GameLaunchActivity extends AppCompatActivity {
         Intent intent = getIntent();
         this.difficulty = GameDifficultyUtils.fromIntent(intent);
         TextView text = findViewById(R.id.gameLaunchingText);
-        text.setText("Recherche d'une zone à proximité... \n Niveau : " + difficulty.toString());
+        text.setText("Recherche d'une zone à proximité...");
     }
 
     @SuppressLint("MissingPermission")
@@ -63,12 +65,15 @@ public class GameLaunchActivity extends AppCompatActivity {
     private void findSurrounding(Location currentLocation) {
         Pair target = getRandomPointAround(currentLocation, this.difficulty.getMinMaxRadius());
         TextView text = findViewById(R.id.gameLaunchingText);
-        text.setText(String.format("C'est parti ! Niveau : %s %nCoords %f, %f", this.difficulty.toString(), target.first, target.second));
+        text.setText("C'est parti !");
 
-        Intent intent = new Intent(this, GameStreetActivity.class);
-        intent.putExtra("targetCoordsLongitude", (Double) target.first);
-        intent.putExtra("targetCoordsLatitude", (Double) target.second);
-        startActivity(intent);
+        Handler handler = new Handler(Looper.getMainLooper());
+        handler.postDelayed(() -> {
+            Intent intent = new Intent(this, GameStreetActivity.class);
+            intent.putExtra("targetCoordsLongitude", (Double) target.first);
+            intent.putExtra("targetCoordsLatitude", (Double) target.second);
+            startActivity(intent);
+        }, 1000);
     }
 
 
