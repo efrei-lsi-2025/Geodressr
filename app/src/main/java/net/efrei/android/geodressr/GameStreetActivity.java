@@ -3,12 +3,12 @@ package net.efrei.android.geodressr;
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.os.Bundle;
-import android.util.Pair;
 import android.widget.TextView;
 
 import com.google.android.gms.maps.StreetViewPanoramaOptions;
 import com.google.android.gms.maps.SupportStreetViewPanoramaFragment;
 import com.google.android.gms.maps.model.LatLng;
+import com.google.android.gms.maps.model.StreetViewSource;
 
 import net.efrei.android.geodressr.timer.ThreadedTimer;
 import net.efrei.android.geodressr.timer.TimerUtils;
@@ -43,7 +43,7 @@ public class GameStreetActivity extends AppCompatActivity {
         );
 
         StreetViewPanoramaOptions options = new StreetViewPanoramaOptions()
-                .position(targetCoords)
+                .position(targetCoords, StreetViewSource.OUTDOOR)
                 .streetNamesEnabled(false)
                 .userNavigationEnabled(false);
 
