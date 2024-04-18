@@ -64,6 +64,11 @@ public class GameLaunchActivity extends AppCompatActivity {
         Pair target = getRandomPointAround(currentLocation, this.difficulty.getMinMaxRadius());
         TextView text = findViewById(R.id.gameLaunchingText);
         text.setText(String.format("C'est parti ! Niveau : %s %nCoords %f, %f", this.difficulty.toString(), target.first, target.second));
+
+        Intent intent = new Intent(this, GameStreetActivity.class);
+        intent.putExtra("targetCoordsLongitude", (Double) target.first);
+        intent.putExtra("targetCoordsLatitude", (Double) target.second);
+        startActivity(intent);
     }
 
 

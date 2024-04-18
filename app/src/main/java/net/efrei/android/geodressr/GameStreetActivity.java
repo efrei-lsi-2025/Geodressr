@@ -3,6 +3,7 @@ package net.efrei.android.geodressr;
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.os.Bundle;
+import android.util.Pair;
 
 import com.google.android.gms.maps.SupportStreetViewPanoramaFragment;
 import com.google.android.gms.maps.model.LatLng;
@@ -13,7 +14,8 @@ import com.google.android.gms.maps.model.LatLng;
  * Affiche la streetview, le temps passé et la distance estimée dynamique du lieu à trouver.
  *
  * Paramètres :
- * - targetCoords : coordonnées GPS de la cible
+ * - targetCoordsLongitude : longitude du lieu à trouver
+ * - targetCoordsLatitude : latitude du lieu à trouver
  */
 public class GameStreetActivity extends AppCompatActivity {
 
@@ -31,8 +33,14 @@ public class GameStreetActivity extends AppCompatActivity {
         SupportStreetViewPanoramaFragment streetViewPanoramaFragment =
                 (SupportStreetViewPanoramaFragment) getSupportFragmentManager().findFragmentById(R.id.streetViewPanoramaView);
 
+        // get intent targetCoords
+        LatLng targetCoords = new LatLng(
+                getIntent().getDoubleExtra("targetCoordsLatitude", 0),
+                getIntent().getDoubleExtra("targetCoordsLongitude", 0)
+        );
+
         streetViewPanoramaFragment.getStreetViewPanoramaAsync(streetViewPanorama -> {
-            streetViewPanorama.setPosition(new LatLng(48.91522771645218, 2.2295974043058755));
+            streetViewPanorama.setPosition(targetCoords);
         });
     }
 }
