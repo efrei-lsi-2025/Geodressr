@@ -33,12 +33,12 @@ public class GameDifficultyUtils {
     public Pair<Integer, Integer> getMinMaxRadius() {
         switch (difficulty) {
             case DIFFICILE:
-                return new Pair<>(500, 1000);
+                return new Pair<>(700, 2000);
             case MOYEN:
-                return new Pair<>(100, 500);
+                return new Pair<>(200, 700);
             case FACILE:
             default:
-                return new Pair<>(0, 100);
+                return new Pair<>(50, 200);
         }
     }
 }

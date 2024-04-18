@@ -4,9 +4,14 @@ import androidx.appcompat.app.AppCompatActivity;
 
 import android.os.Bundle;
 import android.util.Pair;
+import android.widget.TextView;
 
+import com.google.android.gms.maps.StreetViewPanoramaOptions;
 import com.google.android.gms.maps.SupportStreetViewPanoramaFragment;
 import com.google.android.gms.maps.model.LatLng;
+
+import net.efrei.android.geodressr.timer.ThreadedTimer;
+import net.efrei.android.geodressr.timer.TimerUtils;
 
 
 /**
@@ -37,8 +42,27 @@ public class GameStreetActivity extends AppCompatActivity {
                 getIntent().getDoubleExtra("targetCoordsLongitude", 0)
         );
 
-        streetViewPanoramaFragment.getStreetViewPanoramaAsync(streetViewPanorama -> {
-            streetViewPanorama.setPosition(targetCoords);
+        StreetViewPanoramaOptions options = new StreetViewPanoramaOptions()
+                .position(targetCoords)
+                .streetNamesEnabled(false)
+                .userNavigationEnabled(false);
+
+        SupportStreetViewPanoramaFragment fragment =
+                SupportStreetViewPanoramaFragment.newInstance(options);
+
+        getSupportFragmentManager()
+                .beginTransaction()
+                .replace(R.id.streetViewPanoramaView, fragment)
+                .commit();
+
+        launchTimer();
+    }
+
+    private void launchTimer() {
+        TextView timerTextView = findViewById(R.id.timerTextView);
+        ThreadedTimer timer = new ThreadedTimer(secondsRemaining -> {
+            runOnUiThread(() -> timerTextView.setText(TimerUtils.formatTime(secondsRemaining)));
         });
+        timer.start();
     }
 }
