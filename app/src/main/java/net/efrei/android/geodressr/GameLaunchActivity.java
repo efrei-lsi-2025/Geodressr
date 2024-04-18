@@ -24,27 +24,27 @@ import java.util.Random;
  */
 public class GameLaunchActivity extends AppCompatActivity {
     private FusedLocationProviderClient fusedLocationClient;
-    private GameDifficulty difficulty;
+    private GameDifficultyUtils difficulty;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_game_launch);
 
-        fusedLocationClient = LocationServices.getFusedLocationProviderClient(this);
-        setDifficulty();
+        retrieveGameDifficulty();
         setupLocation();
     }
 
-    private void setDifficulty() {
+    private void retrieveGameDifficulty() {
         Intent intent = getIntent();
-        this.difficulty = (GameDifficulty) intent.getSerializableExtra("gameDifficulty");
+        this.difficulty = GameDifficultyUtils.fromIntent(intent);
         TextView text = findViewById(R.id.gameLaunchingText);
-        text.setText("Recherche d'une zone à proximité... \n Niveau : " + difficulty);
+        text.setText("Recherche d'une zone à proximité... \n Niveau : " + difficulty.toString());
     }
 
     @SuppressLint("MissingPermission")
     private void setupLocation() {
+        fusedLocationClient = LocationServices.getFusedLocationProviderClient(this);
         CancellationTokenSource cancellationTokenSource = new CancellationTokenSource();
         if(!PermissionUtils.hasLocationPermission(this)) {
             PermissionUtils.requestLocationPermission(this, 1);
@@ -61,37 +61,36 @@ public class GameLaunchActivity extends AppCompatActivity {
     }
 
     private void findSurrounding(Location currentLocation) {
-        Pair target = getRandomPointAround(currentLocation, 200);
+        Pair target = getRandomPointAround(currentLocation, this.difficulty.getMinMaxRadius());
         TextView text = findViewById(R.id.gameLaunchingText);
-        text.setText(String.format("%f, %f", target.first, target.second));
+        text.setText(String.format("C'est parti ! Niveau : %s %nCoords %f, %f", this.difficulty.toString(), target.first, target.second));
     }
 
-    /**
-     * https://gis.stackexchange.com/a/68275
-     * @param currentLocation current latitude / longitude
-     * @param radius max radius
-     * @return pair having longitude and latitude
-     */
-    public static Pair<Double, Double> getRandomPointAround(Location currentLocation, int radius) {
-        double x0 = currentLocation.getLongitude();
-        double y0 = currentLocation.getLatitude();
+
+    public static Pair<Double, Double> getRandomPointAround(Location currentLocation, Pair<Integer, Integer> minMaxRadius) {
+        double longitude = currentLocation.getLongitude();
+        double latitude = currentLocation.getLatitude();
+        double minRadius = minMaxRadius.first;
+        double maxRadius = minMaxRadius.second;
+
+        // Convertir les rayons de mètres en degrés (approximation)
+        double maxRadiusDegrees = metersToDegrees(maxRadius);
+        double minRadiusDegrees = metersToDegrees(minRadius);
+
+        // Générer des coordonnées aléatoires dans le rectangle défini par les rayons
         Random random = new Random();
+        double randomLongitudeOffset = random.nextDouble() * (maxRadiusDegrees - minRadiusDegrees) + minRadiusDegrees;
+        double randomLatitudeOffset = random.nextDouble() * (maxRadiusDegrees - minRadiusDegrees) + minRadiusDegrees;
 
-        // Convert radius from meters to degrees
-        double radiusInDegrees = radius / 111000f;
+        // Ajouter les offsets aux coordonnées d'origine
+        double newLongitude = longitude + randomLongitudeOffset;
+        double newLatitude = latitude + randomLatitudeOffset;
 
-        double u = random.nextDouble();
-        double v = random.nextDouble();
-        double w = radiusInDegrees * Math.sqrt(u);
-        double t = 2 * Math.PI * v;
-        double x = w * Math.cos(t);
-        double y = w * Math.sin(t);
+        return new Pair<>(newLongitude, newLatitude);
+    }
 
-        // Adjust the x-coordinate for the shrinking of the east-west distances
-        double new_x = x / Math.cos(Math.toRadians(y0));
-
-        double foundLongitude = new_x + x0;
-        double foundLatitude = y + y0;
-        return new Pair<>(foundLongitude, foundLatitude);
+    private static double metersToDegrees(double meters) {
+        // Approximation simple pour convertir les mètres en degrés à l'équateur
+        return meters / 111000.0;
     }
 }
