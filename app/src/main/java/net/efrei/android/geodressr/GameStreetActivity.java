@@ -6,6 +6,7 @@ import android.os.Bundle;
 import android.util.Pair;
 import android.widget.TextView;
 
+import com.google.android.gms.maps.StreetViewPanoramaOptions;
 import com.google.android.gms.maps.SupportStreetViewPanoramaFragment;
 import com.google.android.gms.maps.model.LatLng;
 
@@ -41,10 +42,20 @@ public class GameStreetActivity extends AppCompatActivity {
                 getIntent().getDoubleExtra("targetCoordsLongitude", 0)
         );
 
-        streetViewPanoramaFragment.getStreetViewPanoramaAsync(streetViewPanorama -> {
-            streetViewPanorama.setPosition(targetCoords);
-            launchTimer();
-        });
+        StreetViewPanoramaOptions options = new StreetViewPanoramaOptions()
+                .position(targetCoords)
+                .streetNamesEnabled(false)
+                .userNavigationEnabled(false);
+
+        SupportStreetViewPanoramaFragment fragment =
+                SupportStreetViewPanoramaFragment.newInstance(options);
+
+        getSupportFragmentManager()
+                .beginTransaction()
+                .replace(R.id.streetViewPanoramaView, fragment)
+                .commit();
+
+        launchTimer();
     }
 
     private void launchTimer() {
