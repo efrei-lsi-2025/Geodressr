@@ -27,8 +27,6 @@ public class GameStreetActivity extends AppCompatActivity {
         loadStreetViewFragment();
     }
 
-
-
     private void loadStreetViewFragment() {
         SupportStreetViewPanoramaFragment streetViewPanoramaFragment =
                 (SupportStreetViewPanoramaFragment) getSupportFragmentManager().findFragmentById(R.id.streetViewPanoramaView);
