@@ -16,6 +16,20 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.Geodressr"
         tools:targetApi="31">
+        <service
+            android:name=".GameLocationService"
+            android:enabled="true"
+            android:exported="false"></service>
+
+        <activity
+            android:name=".GamePhoto"
+            android:exported="false" />
+        <activity
+            android:name=".GameStreet"
+            android:exported="false" />
+        <activity
+            android:name=".GameLaunch"
+            android:exported="false" />
 
         <meta-data
             android:name="com.google.android.geo.API_KEY"
