@@ -33,9 +33,6 @@ public class GameStreetActivity extends AppCompatActivity {
     }
 
     private void loadStreetViewFragment() {
-        SupportStreetViewPanoramaFragment streetViewPanoramaFragment =
-                (SupportStreetViewPanoramaFragment) getSupportFragmentManager().findFragmentById(R.id.streetViewPanoramaView);
-
         // get intent targetCoords
         LatLng targetCoords = new LatLng(
                 getIntent().getDoubleExtra("targetCoordsLatitude", 0),
