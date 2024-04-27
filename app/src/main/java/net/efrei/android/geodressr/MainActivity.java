@@ -30,7 +30,7 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        if(!PermissionUtils.hasLocationPermission(this)) {
+        if (!PermissionUtils.hasLocationPermission(this)) {
             PermissionUtils.requestLocationPermission(this, LOCATION_PERMISSION_REQUEST_CODE);
         }
 
@@ -72,8 +72,8 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
                 map.moveCamera(
                         CameraUpdateFactory.newLatLngZoom(
                                 new LatLng(location.getLatitude(), location.getLongitude()
-                        ), 15
-                    )
+                                ), 15
+                        )
                 );
             }
         });
@@ -82,7 +82,7 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
     public void onDifficultyClick(View view) {
         Intent intent = new Intent(this, GameLaunchActivity.class);
 
-        if(view.getId() == R.id.facile) {
+        if (view.getId() == R.id.facile) {
             intent.putExtra("gameDifficulty", GameDifficulty.FACILE);
         } else if (view.getId() == R.id.moyen) {
             intent.putExtra("gameDifficulty", GameDifficulty.MOYEN);

@@ -48,7 +48,7 @@ public class GameLaunchActivity extends AppCompatActivity {
     private void setupLocation() {
         fusedLocationClient = LocationServices.getFusedLocationProviderClient(this);
         CancellationTokenSource cancellationTokenSource = new CancellationTokenSource();
-        if(!PermissionUtils.hasLocationPermission(this)) {
+        if (!PermissionUtils.hasLocationPermission(this)) {
             PermissionUtils.requestLocationPermission(this, 1);
         }
         fusedLocationClient.getCurrentLocation(Priority.PRIORITY_HIGH_ACCURACY, cancellationTokenSource.getToken())
@@ -63,44 +63,45 @@ public class GameLaunchActivity extends AppCompatActivity {
     }
 
     private void findSurrounding(Location currentLocation) {
-        Pair target = getRandomPointAround(currentLocation, this.difficulty.getMinMaxRadius());
+        Location target = getRandomPointAround(currentLocation, this.difficulty.getMinMaxRadius());
         TextView text = findViewById(R.id.gameLaunchingText);
         text.setText("C'est parti !");
 
         Handler handler = new Handler(Looper.getMainLooper());
         handler.postDelayed(() -> {
             Intent intent = new Intent(this, GameStreetActivity.class);
-            intent.putExtra("targetCoordsLongitude", (Double) target.first);
-            intent.putExtra("targetCoordsLatitude", (Double) target.second);
+            intent.putExtra("targetCoordsLongitude", (Double) target.getLongitude());
+            intent.putExtra("targetCoordsLatitude", (Double) target.getLatitude());
             startActivity(intent);
         }, 1000);
     }
 
-
-    public static Pair<Double, Double> getRandomPointAround(Location currentLocation, Pair<Integer, Integer> minMaxRadius) {
-        double longitude = currentLocation.getLongitude();
-        double latitude = currentLocation.getLatitude();
-        double minRadius = minMaxRadius.first;
-        double maxRadius = minMaxRadius.second;
-
-        // Convertir les rayons de mètres en degrés (approximation)
-        double maxRadiusDegrees = metersToDegrees(maxRadius);
-        double minRadiusDegrees = metersToDegrees(minRadius);
-
-        // Générer des coordonnées aléatoires dans le rectangle défini par les rayons
+    private static Location getRandomPointAround(Location currentLocation, Pair<Integer, Integer> minMaxRadius) {
         Random random = new Random();
-        double randomLongitudeOffset = random.nextDouble() * (maxRadiusDegrees - minRadiusDegrees) + minRadiusDegrees;
-        double randomLatitudeOffset = random.nextDouble() * (maxRadiusDegrees - minRadiusDegrees) + minRadiusDegrees;
-
-        // Ajouter les offsets aux coordonnées d'origine
-        double newLongitude = longitude + randomLongitudeOffset;
-        double newLatitude = latitude + randomLatitudeOffset;
-
-        return new Pair<>(newLongitude, newLatitude);
+        int min = minMaxRadius.first;
+        int max = minMaxRadius.second;
+        double distance = random.nextInt(max - min + 1) + min;
+        double angle = random.nextInt(360);
+        return calculateDestinationPoint(currentLocation, distance, angle);
     }
 
-    private static double metersToDegrees(double meters) {
-        // Approximation simple pour convertir les mètres en degrés à l'équateur
-        return meters / 111000.0;
+
+    private static Location calculateDestinationPoint(Location position, double distanceInMeter, double angle) {
+        // https://stackoverflow.com/q/44419722
+        double startLatitude = Math.toRadians(position.getLatitude());
+        double startLongitude = Math.toRadians(position.getLongitude());
+        double bearing = Math.toRadians(angle);
+        double earthRadius = 6371e3;
+        double angularDistance = distanceInMeter / earthRadius;
+
+        double destinationLatitudeRadians = Math.asin(Math.sin(startLatitude) * Math.cos(angularDistance) +
+                Math.cos(startLatitude) * Math.sin(angularDistance) * Math.cos(bearing));
+        double destinationLongitudeRadians = startLongitude + Math.atan2(Math.sin(bearing) * Math.sin(angularDistance) * Math.cos(startLatitude),
+                Math.cos(angularDistance) - Math.sin(startLatitude) * Math.sin(destinationLatitudeRadians));
+
+        Location result = new Location(position);
+        result.setLatitude(Math.toDegrees(destinationLatitudeRadians));
+        result.setLongitude((Math.toDegrees(destinationLongitudeRadians) + 540) % 360 - 180);
+        return result;
     }
 }
