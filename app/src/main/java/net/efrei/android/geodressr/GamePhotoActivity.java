@@ -1,6 +1,5 @@
 package net.efrei.android.geodressr;
 
-import android.content.ActivityNotFoundException;
 import android.content.ContentValues;
 import android.content.Intent;
 import android.net.Uri;
@@ -23,28 +22,33 @@ import net.efrei.android.geodressr.timer.TimerUtils;
 
 /**
  * Etape 3 du jeu : prendre en photo le lieu
- *
+ * <p>
  * Paramètres :
  * - positionLatitude + positionLongitude : double - coordonnées GPS trouvées.
  * - timeSpent : long - nombre de secondes passées pour cette partie
  */
 public class GamePhotoActivity extends AppCompatActivity {
     ActivityResultLauncher<Intent> startCamera;
+    private Uri cam_uri;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_game_photo);
+
         getIntent().getDoubleExtra("positionLatitude", 0);
         getIntent().getDoubleExtra("positionLongitude", 0);
 
         setupText();
         setupIntents();
     }
+
     private void setupText() {
         long timeSpentSec = getIntent().getLongExtra("timeSpent", 1);
         TextView timeSpent = findViewById(R.id.photoTimeSpent);
-        timeSpent.setText(TimerUtils.formatTime(timeSpentSec));
+        timeSpent.setText(TimerUtils.formatTimeMinSecs(timeSpentSec));
     }
+
     private void setupIntents() {
         startCamera = registerForActivityResult(
                 new ActivityResultContracts.StartActivityForResult(), this::handlePhotoReceived
@@ -72,9 +76,9 @@ public class GamePhotoActivity extends AppCompatActivity {
     public void onSavePhotoClick(View view) {
     }
 
-    private Uri cam_uri;
     private void handlePhotoReceived(ActivityResult result) {
         if (result.getResultCode() != RESULT_OK) {
+            Toast.makeText(this, "Prise de photo annulée", Toast.LENGTH_LONG).show();
             return;
         }
         // There are no request codes
@@ -83,6 +87,7 @@ public class GamePhotoActivity extends AppCompatActivity {
         Button saveBtn = findViewById(R.id.photoSaveBtn);
         saveBtn.setEnabled(true);
     }
+
     private void launchCamera() {
         ContentValues values = new ContentValues();
         values.put(MediaStore.Images.Media.TITLE, "New Picture");

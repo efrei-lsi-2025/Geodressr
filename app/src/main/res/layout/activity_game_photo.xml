@@ -18,6 +18,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_margin="30sp"
+            android:layout_marginBottom="0dp"
             android:text="Emplacement trouvé en"
             android:textAlignment="center"
             android:textSize="30sp"
@@ -29,7 +30,7 @@
             android:layout_height="wrap_content"
             android:text="000min 99s"
             android:textAlignment="center"
-            android:textSize="40sp"
+            android:textSize="45sp"
             />
 
         <TextView
