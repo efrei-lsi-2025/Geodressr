@@ -2,7 +2,10 @@ package net.efrei.android.geodressr;
 
 import androidx.appcompat.app.AppCompatActivity;
 
+import android.content.Intent;
 import android.os.Bundle;
+import android.os.Handler;
+import android.os.Looper;
 import android.widget.TextView;
 
 import com.google.android.gms.maps.StreetViewPanoramaOptions;
@@ -23,6 +26,8 @@ import net.efrei.android.geodressr.timer.TimerUtils;
  * - targetCoordsLatitude : latitude du lieu à trouver
  */
 public class GameStreetActivity extends AppCompatActivity {
+    private ThreadedTimer gameTimer;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -30,6 +35,9 @@ public class GameStreetActivity extends AppCompatActivity {
         setContentView(R.layout.activity_game_street);
 
         loadStreetViewFragment();
+        // TODO : écouter activement la position de l'utilisateur et
+        //   appeler onWinGame lorsque ce dernier est assez proche de la cible
+        onWinGame();
     }
 
     private void loadStreetViewFragment() {
@@ -45,21 +53,42 @@ public class GameStreetActivity extends AppCompatActivity {
                 .userNavigationEnabled(false);
 
         SupportStreetViewPanoramaFragment fragment =
-                SupportStreetViewPanoramaFragment.newInstance(options);
+                (SupportStreetViewPanoramaFragment) getSupportFragmentManager().findFragmentById(R.id.streetViewPanoramaView);
+        if (fragment == null) {
+            fragment = SupportStreetViewPanoramaFragment.newInstance(options);
 
-        getSupportFragmentManager()
-                .beginTransaction()
-                .replace(R.id.streetViewPanoramaView, fragment)
-                .commit();
+            getSupportFragmentManager()
+                    .beginTransaction()
+                    .replace(R.id.streetViewPanoramaView, fragment)
+                    .commit();
+        }
 
         launchTimer();
     }
 
     private void launchTimer() {
         TextView timerTextView = findViewById(R.id.timerTextView);
-        ThreadedTimer timer = new ThreadedTimer(secondsRemaining -> {
+        this.gameTimer = new ThreadedTimer(secondsRemaining -> {
             runOnUiThread(() -> timerTextView.setText(TimerUtils.formatTime(secondsRemaining)));
         });
-        timer.start();
+        this.gameTimer.start();
+    }
+    private void onWinGame() {
+        // TODO : replacer par les coordonnées courantes
+        LatLng currentCoords = new LatLng(
+                getIntent().getDoubleExtra("targetCoordsLatitude", 0),
+                getIntent().getDoubleExtra("targetCoordsLongitude", 0)
+        );
+        long timeSpent = this.gameTimer.getElapsedTime();
+
+        // TODO : retirer timer (laissé pour debug gamePhoto)
+        Handler handler = new Handler(Looper.getMainLooper());
+        handler.postDelayed(() -> {
+            Intent intent = new Intent(this, GamePhotoActivity.class);
+            intent.putExtra("timeSpent", timeSpent);
+            intent.putExtra("positionLatitude", currentCoords.latitude);
+            intent.putExtra("positionLongitude", currentCoords.longitude);
+            startActivity(intent);
+        }, 1000);
     }
 }

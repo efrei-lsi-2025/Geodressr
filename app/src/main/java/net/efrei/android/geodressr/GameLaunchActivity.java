@@ -77,4 +77,5 @@ public class GameLaunchActivity extends AppCompatActivity {
             startActivity(intent);
         }, 1000);
     }
+
 }

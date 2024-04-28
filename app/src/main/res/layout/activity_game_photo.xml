@@ -6,4 +6,71 @@
     android:layout_height="match_parent"
     tools:context=".GamePhotoActivity">
 
+    <LinearLayout
+        android:id="@+id/btnSavePhoto"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:gravity="center_horizontal|top"
+        android:orientation="vertical">
+
+        <TextView
+            android:id="@+id/photoH1"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_margin="30sp"
+            android:text="Emplacement trouvé en"
+            android:textAlignment="center"
+            android:textSize="30sp"
+            />
+
+        <TextView
+            android:id="@+id/photoTimeSpent"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="000min 99s"
+            android:textAlignment="center"
+            android:textSize="40sp"
+            />
+
+        <TextView
+            android:id="@+id/textView3"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="30sp"
+            android:text="Ajoutez une photo de votre lieu" />
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:padding="20dp">
+
+            <ImageView
+                android:id="@+id/photoContainer"
+                android:layout_width="300dp"
+                android:layout_height="300dp"
+                app:srcCompat="@drawable/logo_geodressr" />
+
+            <Space
+                android:layout_width="0dp"
+                android:layout_height="0dp"
+                android:layout_weight="1" />
+
+            <ImageButton
+                android:id="@+id/btnAddPhoto"
+                android:layout_width="50dp"
+                android:layout_height="50dp"
+                android:contentDescription="add new photo"
+                android:onClick="onAddPhotoClick"
+                app:srcCompat="@android:drawable/ic_menu_gallery" />
+        </LinearLayout>
+
+        <Button
+            android:id="@+id/photoSaveBtn"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Enregistrer"
+            android:enabled="false"
+            android:onClick="onSavePhotoClick"/>
+    </LinearLayout>
 </androidx.constraintlayout.widget.ConstraintLayout>

@@ -27,4 +27,8 @@ public class ThreadedTimer {
     public synchronized void stop() {
         running = false;
     }
+
+    public synchronized long getElapsedTime() {
+        return this.secondsElapsed;
+    }
 }
