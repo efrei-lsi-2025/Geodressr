@@ -26,7 +26,7 @@ import net.efrei.android.geodressr.timer.TimerUtils;
  * - timeSpent : long - nombre de secondes passées pour cette partie
  */
 public class GamePhotoActivity extends AppCompatActivity {
-
+    ActivityResultLauncher<Intent> startCamera;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -35,15 +35,21 @@ public class GamePhotoActivity extends AppCompatActivity {
         getIntent().getDoubleExtra("positionLongitude", 0);
 
         setupText();
+        setupIntents();
     }
-    public void setupText() {
+    private void setupText() {
         long timeSpentSec = getIntent().getLongExtra("timeSpent", 1);
         TextView timeSpent = findViewById(R.id.photoTimeSpent);
         timeSpent.setText(TimerUtils.formatTime(timeSpentSec));
     }
+    private void setupIntents() {
+        startCamera = registerForActivityResult(
+                new ActivityResultContracts.StartActivityForResult(), this::handlePhotoReceived
+        );
+    }
 
     public void onAddPhotoClick(View view) {
-        dispatchTakePictureIntent();
+        launchCamera();
     }
 
     public void onSavePhotoClick(View view) {
@@ -60,20 +66,14 @@ public class GamePhotoActivity extends AppCompatActivity {
         Button saveBtn = findViewById(R.id.photoSaveBtn);
         saveBtn.setEnabled(true);
     }
-    private void dispatchTakePictureIntent() {
-        try {
-            ActivityResultLauncher<Intent> startCamera = registerForActivityResult(
-                    new ActivityResultContracts.StartActivityForResult(), this::handlePhotoReceived
-            );
-            ContentValues values = new ContentValues();
-            values.put(MediaStore.Images.Media.TITLE, "New Picture");
-            values.put(MediaStore.Images.Media.DESCRIPTION, "From Camera");
-            cam_uri = getContentResolver().insert(MediaStore.Images.Media.EXTERNAL_CONTENT_URI, values);
-            Intent cameraIntent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
-            cameraIntent.putExtra(MediaStore.EXTRA_OUTPUT, cam_uri);
-            startCamera.launch(cameraIntent); // VERY NEW WAY
-        } catch (ActivityNotFoundException e) {
-            e.printStackTrace();
-        }
+    private void launchCamera() {
+        ContentValues values = new ContentValues();
+        values.put(MediaStore.Images.Media.TITLE, "New Picture");
+        values.put(MediaStore.Images.Media.DESCRIPTION, "From Camera");
+        cam_uri = getContentResolver().insert(MediaStore.Images.Media.EXTERNAL_CONTENT_URI, values);
+
+        Intent cameraIntent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
+        cameraIntent.putExtra(MediaStore.EXTRA_OUTPUT, cam_uri);
+        startCamera.launch(cameraIntent);
     }
 }

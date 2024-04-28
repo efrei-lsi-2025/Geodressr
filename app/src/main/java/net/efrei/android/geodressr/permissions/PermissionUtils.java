@@ -1,12 +1,10 @@
-package net.efrei.android.geodressr;
+package net.efrei.android.geodressr.permissions;
 
 import android.Manifest;
 
 import androidx.appcompat.app.AppCompatActivity;
 
 public class PermissionUtils {
-
-
     public static void requestLocationPermission(AppCompatActivity activity, int requestCode) {
         activity.requestPermissions(new String[]{
                 android.Manifest.permission.ACCESS_FINE_LOCATION,

@@ -10,7 +10,6 @@ import android.location.Location;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Looper;
-import android.util.Pair;
 import android.widget.TextView;
 
 import com.google.android.gms.location.FusedLocationProviderClient;
@@ -18,7 +17,7 @@ import com.google.android.gms.location.LocationServices;
 import com.google.android.gms.location.Priority;
 import com.google.android.gms.tasks.CancellationTokenSource;
 
-import java.util.Random;
+import net.efrei.android.geodressr.permissions.PermissionUtils;
 
 /**
  * Etape 1 du jeu : recherche d'une zone à proximité
