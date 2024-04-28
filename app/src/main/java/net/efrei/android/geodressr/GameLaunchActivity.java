@@ -74,6 +74,7 @@ public class GameLaunchActivity extends AppCompatActivity {
             intent.putExtra("targetCoordsLongitude", (Double) target.getLongitude());
             intent.putExtra("targetCoordsLatitude", (Double) target.getLatitude());
             startActivity(intent);
+            this.finish();
         }, 1000);
     }
 

@@ -89,6 +89,7 @@ public class GameStreetActivity extends AppCompatActivity {
             intent.putExtra("positionLatitude", currentCoords.latitude);
             intent.putExtra("positionLongitude", currentCoords.longitude);
             startActivity(intent);
+            this.finish();
         }, 1000);
     }
 }

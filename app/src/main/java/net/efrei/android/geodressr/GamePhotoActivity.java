@@ -10,12 +10,15 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.activity.result.ActivityResult;
 import androidx.activity.result.ActivityResultLauncher;
 import androidx.activity.result.contract.ActivityResultContracts;
+import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 
+import net.efrei.android.geodressr.permissions.PermissionUtils;
 import net.efrei.android.geodressr.timer.TimerUtils;
 
 /**
@@ -49,7 +52,21 @@ public class GamePhotoActivity extends AppCompatActivity {
     }
 
     public void onAddPhotoClick(View view) {
-        launchCamera();
+        if (PermissionUtils.hasCameraPermission(this)) {
+            launchCamera();
+        } else {
+            PermissionUtils.requestCameraPermission(this);
+        }
+    }
+
+    @Override
+    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
+        super.onRequestPermissionsResult(requestCode, permissions, grantResults);
+        if (PermissionUtils.isCameraJustGranted(requestCode, grantResults)) {
+            launchCamera();
+        } else {
+            Toast.makeText(this, "Missing camera permission", Toast.LENGTH_LONG).show();
+        }
     }
 
     public void onSavePhotoClick(View view) {
