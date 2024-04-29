@@ -6,7 +6,7 @@
     android:layout_height="match_parent"
     tools:context=".GameStreetActivity">
 
-    <androidx.fragment.app.FragmentContainerView
+    <com.google.android.gms.maps.StreetViewPanoramaView
         android:id="@+id/streetViewPanoramaView"
         android:name="com.google.android.gms.maps.SupportStreetViewPanoramaFragment"
         android:layout_width="match_parent"
@@ -41,7 +41,6 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_weight=".33"
-            android:text="00:00"
             android:textSize="20sp"
             android:paddingVertical="10dp"
             android:textColor="@color/white"
@@ -63,7 +62,6 @@
             android:layout_height="wrap_content"
             android:layout_weight=".33"
             android:paddingVertical="10dp"
-            android:text="500m"
             android:textSize="20sp"
             android:textColor="@color/white"
             android:background="@drawable/rounded_box"

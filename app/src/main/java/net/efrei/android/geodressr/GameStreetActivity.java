@@ -1,13 +1,25 @@
 package net.efrei.android.geodressr;
 
+import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 
+import android.annotation.SuppressLint;
 import android.content.Intent;
+import android.location.Location;
 import android.os.Bundle;
 import android.os.Handler;
+import android.os.HandlerThread;
 import android.os.Looper;
 import android.widget.TextView;
 
+import com.google.android.gms.location.FusedLocationProviderClient;
+import com.google.android.gms.location.LocationCallback;
+import com.google.android.gms.location.LocationRequest;
+import com.google.android.gms.location.LocationResult;
+import com.google.android.gms.location.LocationServices;
+import com.google.android.gms.location.Priority;
+import com.google.android.gms.maps.OnStreetViewPanoramaReadyCallback;
+import com.google.android.gms.maps.StreetViewPanorama;
 import com.google.android.gms.maps.StreetViewPanoramaOptions;
 import com.google.android.gms.maps.SupportStreetViewPanoramaFragment;
 import com.google.android.gms.maps.model.LatLng;
@@ -22,11 +34,21 @@ import net.efrei.android.geodressr.timer.TimerUtils;
  * Affiche la streetview, le temps passé et la distance estimée dynamique du lieu à trouver.
  *
  * Paramètres :
- * - targetCoordsLongitude : longitude du lieu à trouver
- * - targetCoordsLatitude : latitude du lieu à trouver
+ * - targetCoordsLongitude : longitude du lieu à trouver (avant correction du StreetView)
+ * - targetCoordsLatitude : latitude du lieu à trouver (avant correction du StreetView)
  */
-public class GameStreetActivity extends AppCompatActivity {
+public class GameStreetActivity extends AppCompatActivity implements OnStreetViewPanoramaReadyCallback {
     private ThreadedTimer gameTimer;
+
+    private LocationCallback fusedTrackerCallback;
+    private FusedLocationProviderClient fusedLocationClient;
+    private HandlerThread locationHandlerThread;
+
+    /**
+     * Les coordonnées corrigées de la cible (par StreetView)
+     */
+    private LatLng targetCoords = null;
+    private LatLng currentCoords = null;
 
 
     @Override
@@ -34,21 +56,69 @@ public class GameStreetActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_game_street);
 
+        fusedLocationClient = LocationServices.getFusedLocationProviderClient(this);
+
         loadStreetViewFragment();
-        // TODO : écouter activement la position de l'utilisateur et
-        //   appeler onWinGame lorsque ce dernier est assez proche de la cible
-        onWinGame();
+    }
+
+    @SuppressLint("MissingPermission")
+    private void listenToUserPosition() {
+        locationHandlerThread = new HandlerThread("RequestLocation");
+        locationHandlerThread.start();
+
+        fusedTrackerCallback = new LocationCallback() {
+            @SuppressLint("DefaultLocale")
+            @Override
+            public void onLocationResult(@NonNull LocationResult locationResult) {
+                if ((locationResult.getLastLocation() != null) && (targetCoords != null)) {
+                    currentCoords = new LatLng(
+                            locationResult.getLastLocation().getLatitude(),
+                            locationResult.getLastLocation().getLongitude()
+                    );
+
+                    float[] distance = new float[1];
+                    Location.distanceBetween(
+                            currentCoords.latitude,
+                            currentCoords.longitude,
+                            targetCoords.latitude,
+                            targetCoords.longitude,
+                            distance
+                    );
+
+                    System.out.println("DISTANCE: " + distance[0]);
+                    System.out.println("TARGET: " + targetCoords.latitude + "|" + targetCoords.longitude);
+                    System.out.println("LOCATION: " + currentCoords.latitude + "|" + currentCoords.longitude);
+                    System.out.println("ACCURACY: " + locationResult.getLastLocation().getAccuracy());
+
+                    TextView distanceTextView = findViewById(R.id.distanceTextView);
+                    runOnUiThread(() -> distanceTextView.setText(String.format("%dm", (int) distance[0])));
+
+                    if (distance[0] < locationResult.getLastLocation().getAccuracy()) {
+                        onWinGame();
+                    }
+                }
+            }
+        };
+
+        LocationRequest req = new LocationRequest.Builder(Priority.PRIORITY_HIGH_ACCURACY, 100)
+                .setWaitForAccurateLocation(true)
+                .setMinUpdateIntervalMillis(500)
+                .setMaxUpdateDelayMillis(100)
+                .setIntervalMillis(1000)
+                .setDurationMillis(Long.MAX_VALUE)
+                .build();
+
+        fusedLocationClient.requestLocationUpdates(req, fusedTrackerCallback, locationHandlerThread.getLooper());
     }
 
     private void loadStreetViewFragment() {
-        // get intent targetCoords
-        LatLng targetCoords = new LatLng(
+        LatLng targetIntentCoords = new LatLng(
                 getIntent().getDoubleExtra("targetCoordsLatitude", 0),
                 getIntent().getDoubleExtra("targetCoordsLongitude", 0)
         );
 
         StreetViewPanoramaOptions options = new StreetViewPanoramaOptions()
-                .position(targetCoords, StreetViewSource.OUTDOOR)
+                .position(targetIntentCoords, StreetViewSource.OUTDOOR)
                 .streetNamesEnabled(false)
                 .userNavigationEnabled(false);
 
@@ -61,24 +131,32 @@ public class GameStreetActivity extends AppCompatActivity {
                     .beginTransaction()
                     .replace(R.id.streetViewPanoramaView, fragment)
                     .commit();
-        }
 
-        launchTimer();
+            fragment.getStreetViewPanoramaAsync(this);
+        }
+    }
+
+    @Override
+    public void onStreetViewPanoramaReady(StreetViewPanorama panorama) {
+        panorama.setOnStreetViewPanoramaChangeListener(location -> {
+            targetCoords = new LatLng(location.position.latitude, location.position.longitude);
+            this.listenToUserPosition();
+            this.launchTimer();
+        });
     }
 
     private void launchTimer() {
         TextView timerTextView = findViewById(R.id.timerTextView);
-        this.gameTimer = new ThreadedTimer(secondsRemaining -> {
-            runOnUiThread(() -> timerTextView.setText(TimerUtils.formatTime(secondsRemaining)));
-        });
+        this.gameTimer = new ThreadedTimer(secondsRemaining ->
+                runOnUiThread(() ->
+                        timerTextView.setText(TimerUtils.formatTime(secondsRemaining)
+                        )
+                )
+        );
         this.gameTimer.start();
     }
+
     private void onWinGame() {
-        // TODO : replacer par les coordonnées courantes
-        LatLng currentCoords = new LatLng(
-                getIntent().getDoubleExtra("targetCoordsLatitude", 0),
-                getIntent().getDoubleExtra("targetCoordsLongitude", 0)
-        );
         long timeSpent = this.gameTimer.getElapsedTime();
 
         // TODO : retirer timer (laissé pour debug gamePhoto)
@@ -91,5 +169,13 @@ public class GameStreetActivity extends AppCompatActivity {
             startActivity(intent);
             this.finish();
         }, 1000);
+    }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        fusedLocationClient.removeLocationUpdates(fusedTrackerCallback);
+        locationHandlerThread.quit();
+        gameTimer.stop();
     }
 }
