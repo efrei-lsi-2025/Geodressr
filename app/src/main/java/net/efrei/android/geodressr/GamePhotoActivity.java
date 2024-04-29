@@ -4,6 +4,8 @@ import android.content.ContentValues;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
+import android.os.Handler;
+import android.os.Looper;
 import android.provider.MediaStore;
 import android.view.View;
 import android.widget.Button;
@@ -17,8 +19,12 @@ import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 
+import net.efrei.android.geodressr.location.ReverseGeocodingClient;
 import net.efrei.android.geodressr.permissions.PermissionUtils;
 import net.efrei.android.geodressr.timer.TimerUtils;
+
+import java.util.concurrent.Executor;
+import java.util.concurrent.Executors;
 
 /**
  * Etape 3 du jeu : prendre en photo le lieu
@@ -30,17 +36,21 @@ import net.efrei.android.geodressr.timer.TimerUtils;
 public class GamePhotoActivity extends AppCompatActivity {
     ActivityResultLauncher<Intent> startCamera;
     private Uri cam_uri;
+    private String location = "Unknown";
+    private double lat;
+    private double lon;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_game_photo);
 
-        getIntent().getDoubleExtra("positionLatitude", 0);
-        getIntent().getDoubleExtra("positionLongitude", 0);
+        this.lat = getIntent().getDoubleExtra("positionLatitude", 0);
+        this.lon = getIntent().getDoubleExtra("positionLongitude", 0);
 
         setupText();
         setupIntents();
+        setupCity(lat, lon);
     }
 
     private void setupText() {
@@ -97,5 +107,21 @@ public class GamePhotoActivity extends AppCompatActivity {
         Intent cameraIntent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
         cameraIntent.putExtra(MediaStore.EXTRA_OUTPUT, cam_uri);
         startCamera.launch(cameraIntent);
+    }
+
+    private void setupCity(double lat, double lon) {
+        String key = getString(R.string.google_maps_key);
+        Handler handler = new Handler(Looper.getMainLooper());
+        Executor executor = Executors.newSingleThreadExecutor();
+        TextView locationText = findViewById(R.id.photoLocationValue);
+        // Executes in a worker thread
+        executor.execute(() -> {
+            String result = new ReverseGeocodingClient(lat, lon, key).executeRequest();
+            // go back to render thread
+            handler.post(() -> {
+                locationText.setText(result);
+                location = result;
+            });
+        });
     }
 }
