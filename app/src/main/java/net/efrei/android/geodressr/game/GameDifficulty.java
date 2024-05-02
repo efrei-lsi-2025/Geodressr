@@ -1,4 +1,4 @@
-package net.efrei.android.geodressr;
+package net.efrei.android.geodressr.game;
 
 public enum GameDifficulty {
     FACILE,

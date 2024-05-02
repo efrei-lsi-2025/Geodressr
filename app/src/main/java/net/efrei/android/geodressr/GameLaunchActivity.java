@@ -17,6 +17,7 @@ import com.google.android.gms.location.LocationServices;
 import com.google.android.gms.location.Priority;
 import com.google.android.gms.tasks.CancellationTokenSource;
 
+import net.efrei.android.geodressr.game.GameDifficultyUtils;
 import net.efrei.android.geodressr.permissions.PermissionUtils;
 
 /**
@@ -26,7 +27,6 @@ import net.efrei.android.geodressr.permissions.PermissionUtils;
  * - level : facile, moyen, difficile
  */
 public class GameLaunchActivity extends AppCompatActivity {
-    private FusedLocationProviderClient fusedLocationClient;
     private GameDifficultyUtils difficulty;
 
     @Override
@@ -47,7 +47,7 @@ public class GameLaunchActivity extends AppCompatActivity {
 
     @SuppressLint("MissingPermission")
     private void setupLocation() {
-        fusedLocationClient = LocationServices.getFusedLocationProviderClient(this);
+        FusedLocationProviderClient fusedLocationClient = LocationServices.getFusedLocationProviderClient(this);
         CancellationTokenSource cancellationTokenSource = new CancellationTokenSource();
         if (!PermissionUtils.hasLocationPermission(this)) {
             PermissionUtils.requestLocationPermission(this, 1);

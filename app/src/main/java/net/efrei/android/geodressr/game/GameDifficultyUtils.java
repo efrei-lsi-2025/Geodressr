@@ -1,4 +1,4 @@
-package net.efrei.android.geodressr;
+package net.efrei.android.geodressr.game;
 
 import android.content.Intent;
 import android.util.Pair;
