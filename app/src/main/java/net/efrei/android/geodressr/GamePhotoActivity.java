@@ -21,8 +21,11 @@ import androidx.appcompat.app.AppCompatActivity;
 
 import net.efrei.android.geodressr.location.ReverseGeocodingClient;
 import net.efrei.android.geodressr.permissions.PermissionUtils;
+import net.efrei.android.geodressr.persistance.Database;
+import net.efrei.android.geodressr.persistance.GameEntity;
 import net.efrei.android.geodressr.timer.TimerUtils;
 
+import java.util.List;
 import java.util.concurrent.Executor;
 import java.util.concurrent.Executors;
 
@@ -36,9 +39,10 @@ import java.util.concurrent.Executors;
 public class GamePhotoActivity extends AppCompatActivity {
     ActivityResultLauncher<Intent> startCamera;
     private Uri cam_uri;
-    private String location = "Unknown";
+    private String cityName = "Unknown";
     private double lat;
     private double lon;
+    private int timeSpent;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -47,6 +51,7 @@ public class GamePhotoActivity extends AppCompatActivity {
 
         this.lat = getIntent().getDoubleExtra("positionLatitude", 0);
         this.lon = getIntent().getDoubleExtra("positionLongitude", 0);
+        this.timeSpent = getIntent().getIntExtra("timeSpent", 1);
 
         setupText();
         setupIntents();
@@ -54,9 +59,8 @@ public class GamePhotoActivity extends AppCompatActivity {
     }
 
     private void setupText() {
-        long timeSpentSec = getIntent().getLongExtra("timeSpent", 1);
         TextView timeSpent = findViewById(R.id.photoTimeSpent);
-        timeSpent.setText(TimerUtils.formatTimeMinSecs(timeSpentSec));
+        timeSpent.setText(TimerUtils.formatTimeMinSecs(this.timeSpent));
     }
 
     private void setupIntents() {
@@ -84,6 +88,16 @@ public class GamePhotoActivity extends AppCompatActivity {
     }
 
     public void onSavePhotoClick(View view) {
+        GameEntity game = new GameEntity()
+                .setLocation(this.lat, this.lon)
+                .setDuration(this.timeSpent)
+                .setCityName(this.cityName)
+                .setPhoto(this.cam_uri.toString());
+        Database db = new Database(this);
+        db.save(game);
+
+        List<GameEntity> entities = db.query(game, "");
+
     }
 
     private void handlePhotoReceived(ActivityResult result) {
@@ -120,7 +134,7 @@ public class GamePhotoActivity extends AppCompatActivity {
             // go back to render thread
             handler.post(() -> {
                 locationText.setText(result);
-                location = result;
+                cityName = result;
             });
         });
     }
