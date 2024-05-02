@@ -21,7 +21,7 @@ import androidx.appcompat.app.AppCompatActivity;
 
 import net.efrei.android.geodressr.location.ReverseGeocodingClient;
 import net.efrei.android.geodressr.permissions.PermissionUtils;
-import net.efrei.android.geodressr.persistance.Database;
+import net.efrei.android.geodressr.persistance.EntityManager;
 import net.efrei.android.geodressr.persistance.GameEntity;
 import net.efrei.android.geodressr.timer.TimerUtils;
 
@@ -93,7 +93,7 @@ public class GamePhotoActivity extends AppCompatActivity {
                 .setDuration(this.timeSpent)
                 .setCityName(this.cityName)
                 .setPhoto(this.cam_uri.toString());
-        Database db = new Database(this);
+        EntityManager db = new EntityManager(this);
         db.save(game);
 
         List<GameEntity> entities = db.query(game, "");

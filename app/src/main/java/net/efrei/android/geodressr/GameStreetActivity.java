@@ -38,6 +38,9 @@ import net.efrei.android.geodressr.timer.TimerUtils;
  * - targetCoordsLatitude : latitude du lieu à trouver (avant correction du StreetView)
  */
 public class GameStreetActivity extends AppCompatActivity implements OnStreetViewPanoramaReadyCallback {
+    /** inhibe la condition de win */
+    private boolean isLogan = false;
+
     private ThreadedTimer gameTimer;
 
     private LocationCallback fusedTrackerCallback;
@@ -93,7 +96,7 @@ public class GameStreetActivity extends AppCompatActivity implements OnStreetVie
                     TextView distanceTextView = findViewById(R.id.distanceTextView);
                     runOnUiThread(() -> distanceTextView.setText(String.format("%dm", (int) distance[0])));
 
-                    if (distance[0] < locationResult.getLastLocation().getAccuracy()) {
+                    if (distance[0] < locationResult.getLastLocation().getAccuracy() || isLogan) {
                         onWinGame();
                     }
                 }
@@ -159,16 +162,11 @@ public class GameStreetActivity extends AppCompatActivity implements OnStreetVie
     private void onWinGame() {
         long timeSpent = this.gameTimer.getElapsedTime();
 
-        // TODO : retirer timer (laissé pour debug gamePhoto)
-        Handler handler = new Handler(Looper.getMainLooper());
-        handler.postDelayed(() -> {
-            Intent intent = new Intent(this, GamePhotoActivity.class);
-            intent.putExtra("timeSpent", timeSpent);
-            intent.putExtra("positionLatitude", currentCoords.latitude);
-            intent.putExtra("positionLongitude", currentCoords.longitude);
-            startActivity(intent);
-            this.finish();
-        }, 1000);
+        Intent intent = new Intent(this, GamePhotoActivity.class);
+        intent.putExtra("timeSpent", timeSpent);
+        intent.putExtra("positionLatitude", currentCoords.latitude);
+        intent.putExtra("positionLongitude", currentCoords.longitude);
+        startActivity(intent);
     }
 
     @Override

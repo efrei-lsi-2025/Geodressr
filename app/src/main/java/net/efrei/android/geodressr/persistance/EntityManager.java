@@ -8,13 +8,13 @@ import android.database.sqlite.SQLiteOpenHelper;
 import java.util.ArrayList;
 import java.util.List;
 
-public class Database extends SQLiteOpenHelper {
+public class EntityManager extends SQLiteOpenHelper {
     public static final String  DBNAME = "geodressr.db";
     private final Entity[] entities = {
             new GameEntity()
     };
 
-    public Database(Context context) {
+    public EntityManager(Context context) {
         super(context, DBNAME, null, 1);
     }
 
