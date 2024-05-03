@@ -42,7 +42,7 @@ public class GameLaunchActivity extends AppCompatActivity {
         Intent intent = getIntent();
         this.difficulty = GameDifficultyUtils.fromIntent(intent);
         TextView text = findViewById(R.id.gameLaunchingText);
-        text.setText("Recherche d'une zone à proximité...");
+        text.setText(R.string.recherche_zone);
     }
 
     @SuppressLint("MissingPermission")
@@ -58,7 +58,7 @@ public class GameLaunchActivity extends AppCompatActivity {
                         findSurrounding(location);
                     } else {
                         TextView text = findViewById(R.id.gameLaunchingText);
-                        text.setText("Erreur : impossible de localiser");
+                        text.setText(R.string.erreur_impossible_localiser);
                     }
                 });
     }
@@ -66,7 +66,7 @@ public class GameLaunchActivity extends AppCompatActivity {
     private void findSurrounding(Location currentLocation) {
         Location target = getRandomPointAround(currentLocation, this.difficulty.getMinMaxRadius());
         TextView text = findViewById(R.id.gameLaunchingText);
-        text.setText("C'est parti !");
+        text.setText(R.string.c_est_parti);
 
         Handler handler = new Handler(Looper.getMainLooper());
         handler.postDelayed(() -> {

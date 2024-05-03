@@ -1,6 +1,16 @@
 <resources>
     <string name="app_name">Geodressr</string>
-    <string name="difficile">Difficile</string>
-    <string name="moyen">Moyen</string>
-    <string name="facile">Facile</string>
+    <string name="difficile">Difficult</string>
+    <string name="moyen">Normal</string>
+    <string name="facile">Easy</string>
+    <string name="recherche_zone">Search for a nearby area…</string>
+    <string name="emplacement_trouve">Location found in</string>
+    <string name="minutes_placeholder">000min 99s</string>
+    <string name="add_new_photo">Add photo</string>
+    <string name="photo_location_prefix">Photo taken at</string>
+    <string name="three_dots">…</string>
+    <string name="Save">Save</string>
+    <string name="erreur_impossible_localiser">Error: Unable to locate</string>
+    <string name="c_est_parti">Here we go!</string>
+    <string name="ajoutez_une_photo_btn">Add a photo of your location</string>
 </resources>

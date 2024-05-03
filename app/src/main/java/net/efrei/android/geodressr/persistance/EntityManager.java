@@ -21,7 +21,7 @@ public class EntityManager extends SQLiteOpenHelper {
     @Override
     public void onCreate(SQLiteDatabase db) {
         for (Entity e : entities) {
-            db.execSQL("create TABLE "+ e.tableName() + "(" + e.tableColumns() + ")");
+            db.execSQL("CREATE TABLE "+ e.tableName() + "(" + e.tableColumns() + ")");
         }
     }
 
@@ -41,7 +41,7 @@ public class EntityManager extends SQLiteOpenHelper {
     public <T extends Entity> List<T> query(T entityType, String suffix) {
         SQLiteDatabase db = this.getWritableDatabase();
         Cursor cursor = db.rawQuery("SELECT * FROM "+ entityType.tableName() + " " + suffix + ";", new String[]{});
-        List<T> items = new ArrayList<T>();
+        List<T> items = new ArrayList<>();
         while(cursor.moveToNext()) {
             items.add((T) entityType.build().fromCursor(cursor));
         }
