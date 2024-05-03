@@ -14,7 +14,8 @@ public class GameEntity implements Entity {
 
     public GameEntity() {
         Date currentTime = Calendar.getInstance().getTime();
-        values.put("playDate", currentTime.getTime());
+        int timeInSecs = (int) (currentTime.getTime() * 0.001);
+        values.put("playDate", timeInSecs);
     }
 
     @Override
