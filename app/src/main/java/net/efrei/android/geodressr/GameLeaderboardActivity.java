@@ -40,7 +40,7 @@ public class GameLeaderboardActivity extends AppCompatActivity {
 
     private void updateLeaderboard() {
         try (EntityManager db = new EntityManager(this)) {
-            this.entities = db.query(new GameEntity(), "ORDER BY playDate DESC");
+            this.entities = db.query(new GameEntity(), "ORDER BY durationSecs ASC");
         }
     }
 
