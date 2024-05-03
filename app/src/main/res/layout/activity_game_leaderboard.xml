@@ -4,19 +4,20 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     tools:context=".GameLeaderboardActivity"
-    android:orientation="horizontal">
+    android:orientation="vertical">
 
     <com.google.android.material.appbar.MaterialToolbar
-        android:id="@+id/historytoolbar"
+        android:id="@+id/toolbar"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:minHeight="?attr/actionBarSize"
+        android:background="@color/primary"
+        android:layout_marginBottom="10dp"
         />
 
     <LinearLayout
+        android:id="@+id/leaderboardItems"
         android:layout_width="match_parent"
-        android:layout_height="0dp"
-        android:layout_weight="1"
+        android:layout_height="match_parent"
         android:orientation="vertical">
 
     </LinearLayout>

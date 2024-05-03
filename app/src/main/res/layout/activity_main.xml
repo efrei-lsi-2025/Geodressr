@@ -56,6 +56,7 @@
             android:layout_width="match_parent"
             android:layout_height="90dp"
             android:layout_weight=".5"
+            android:layout_marginTop="100dp"
             android:src="@drawable/logo_geodressr" />
 
         <LinearLayout
@@ -63,7 +64,6 @@
             android:layout_height="match_parent"
             android:layout_weight=".5"
             android:orientation="horizontal"
-            android:layout_marginTop="10dp"
             android:weightSum="1">
 
             <Button
@@ -107,7 +107,7 @@
             android:id="@+id/btnOpenLeaderboard"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginTop="100dp"
+            android:layout_marginTop="50dp"
             android:backgroundTint="@color/primaryTransparent"
             android:textColor="@color/white"
             android:onClick="openLeaderboard"
