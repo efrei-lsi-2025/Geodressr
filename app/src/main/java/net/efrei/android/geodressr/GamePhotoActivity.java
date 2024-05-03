@@ -133,7 +133,7 @@ public class GamePhotoActivity extends AppCompatActivity {
         executor.execute(() -> {
             String result = new ReverseGeocodingClient(lat, lon, key).executeRequest();
             // go back to render thread
-            handler.post(() -> {
+            runOnUiThread(() -> {
                 locationText.setText(result);
                 cityName = result;
             });
