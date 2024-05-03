@@ -4,7 +4,6 @@ import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.annotation.SuppressLint;
-import android.app.ProgressDialog;
 import android.content.Intent;
 import android.location.Location;
 import android.os.Bundle;
@@ -175,6 +174,7 @@ public class GameStreetActivity extends AppCompatActivity implements OnStreetVie
         intent.putExtra("timeSpent", timeSpent);
         intent.putExtra("positionLatitude", currentCoords.latitude);
         intent.putExtra("positionLongitude", currentCoords.longitude);
+        intent.putExtra("gameDifficulty", this.getIntent().getSerializableExtra("gameDifficulty"));
         startActivity(intent);
         this.finish();
     }

@@ -19,6 +19,7 @@ import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 
+import net.efrei.android.geodressr.game.GameDifficulty;
 import net.efrei.android.geodressr.location.ReverseGeocodingClient;
 import net.efrei.android.geodressr.permissions.PermissionUtils;
 import net.efrei.android.geodressr.persistance.EntityManager;
@@ -88,11 +89,13 @@ public class GamePhotoActivity extends AppCompatActivity {
     }
 
     public void onSaveButtonClick(View view) {
+        GameDifficulty difficulty = (GameDifficulty) this.getIntent().getSerializableExtra("gameDifficulty");
         GameEntity game = new GameEntity()
                 .setLocation(this.lat, this.lon)
                 .setDuration(this.timeSpent)
                 .setCityName(this.cityName)
-                .setPhoto(this.cam_uri.toString());
+                .setPhoto(this.cam_uri.toString())
+                .setDifficulty(difficulty);
 
         try (EntityManager db = new EntityManager(this)) {
             db.save(game);

@@ -7,6 +7,7 @@ import android.database.Cursor;
 
 import androidx.annotation.NonNull;
 
+import net.efrei.android.geodressr.game.GameDifficulty;
 import net.efrei.android.geodressr.timer.TimerUtils;
 
 public class GameEntity implements Entity {
@@ -33,6 +34,7 @@ public class GameEntity implements Entity {
             "lat REAL",
             "lon REAL",
             "photo TEXT",
+            "difficulty TEXT",
         });
     }
 
@@ -50,6 +52,7 @@ public class GameEntity implements Entity {
         this.values.put("lat", cursor.getDouble(cursor.getColumnIndexOrThrow("lat")));
         this.values.put("lon" , cursor.getDouble(cursor.getColumnIndexOrThrow("lon")));
         this.values.put("photo", cursor.getString(cursor.getColumnIndexOrThrow("photo")));
+        this.values.put("difficulty", cursor.getString(cursor.getColumnIndexOrThrow("difficulty")));
         return this;
     }
 
@@ -81,10 +84,17 @@ public class GameEntity implements Entity {
         this.values.put("photo", photo);
         return this;
     }
+    public GameEntity setDifficulty(GameDifficulty difficulty) {
+        this.values.put("difficulty", difficulty.toString().toLowerCase());
+        return this;
+    }
 
     public String getDurationString() {
         int duration = this.values.getAsInteger("durationSecs");
         return TimerUtils.formatTimeMinSecs(duration);
+    }
+    public String getDifficulty() {
+        return this.values.getAsString("difficulty");
     }
     public String getCityName() {
         return this.values.getAsString("city");

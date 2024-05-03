@@ -73,6 +73,8 @@ public class GameLaunchActivity extends AppCompatActivity {
             Intent intent = new Intent(this, GameStreetActivity.class);
             intent.putExtra("targetCoordsLongitude", (Double) target.getLongitude());
             intent.putExtra("targetCoordsLatitude", (Double) target.getLatitude());
+            intent.putExtra("gameDifficulty", this.getIntent().getSerializableExtra("gameDifficulty"));
+
             startActivity(intent);
             this.finish();
         }, 1000);

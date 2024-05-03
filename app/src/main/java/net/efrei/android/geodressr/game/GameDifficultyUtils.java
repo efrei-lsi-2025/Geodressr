@@ -17,6 +17,10 @@ public class GameDifficultyUtils {
         return new GameDifficultyUtils(deserializedValue);
     }
 
+    public GameDifficulty getValue() {
+        return this.difficulty;
+    }
+
     @NonNull
     public String toString() {
         switch (difficulty) {

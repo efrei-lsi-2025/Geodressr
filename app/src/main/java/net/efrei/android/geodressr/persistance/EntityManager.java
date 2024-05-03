@@ -15,20 +15,20 @@ public class EntityManager extends SQLiteOpenHelper {
     };
 
     public EntityManager(Context context) {
-        super(context, DBNAME, null, 1);
+        super(context, DBNAME, null, 2);
     }
 
     @Override
     public void onCreate(SQLiteDatabase db) {
         for (Entity e : entities) {
-            db.execSQL("CREATE TABLE "+ e.tableName() + "(" + e.tableColumns() + ")");
+            db.execSQL("CREATE TABLE "+ e.tableName() + " (" + e.tableColumns() + ")");
         }
     }
 
     @Override
     public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {
         for (Entity e : entities) {
-            db.execSQL("DROP TABLE IF EXISTS "+ e.tableName());
+            db.execSQL("DROP TABLE "+ e.tableName());
         }
     }
 
