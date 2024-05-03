@@ -14,4 +14,6 @@
     <string name="c_est_parti">C\'est parti !</string>
     <string name="add_new_photo">Ajouter photo</string>
     <string name="photo_location_prefix">Photo prise à</string>
+    <string name="cancelled_photo">Prise de photo annulée</string>
+    <string name="missing_camera_permission">Permission de la caméra manquante</string>
 </resources>

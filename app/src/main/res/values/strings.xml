@@ -13,4 +13,6 @@
     <string name="erreur_impossible_localiser">Error: Unable to locate</string>
     <string name="c_est_parti">Here we go!</string>
     <string name="ajoutez_une_photo_btn">Add a photo of your location</string>
+    <string name="cancelled_photo">Photo taking cancelled</string>
+    <string name="missing_camera_permission">Missing camera permission</string>
 </resources>

@@ -83,7 +83,7 @@ public class GamePhotoActivity extends AppCompatActivity {
         if (PermissionUtils.isCameraJustGranted(requestCode, grantResults)) {
             launchCamera();
         } else {
-            Toast.makeText(this, "Missing camera permission", Toast.LENGTH_LONG).show();
+            Toast.makeText(this, getString(R.string.missing_camera_permission), Toast.LENGTH_LONG).show();
         }
     }
 
@@ -96,10 +96,6 @@ public class GamePhotoActivity extends AppCompatActivity {
 
         try (EntityManager db = new EntityManager(this)) {
             db.save(game);
-
-            List<GameEntity> entities = db.query(game, "");
-            String result = entities.toString();
-            System.out.println(result);
         }
 
         this.finish();
@@ -107,7 +103,7 @@ public class GamePhotoActivity extends AppCompatActivity {
 
     private void handlePhotoReceived(ActivityResult result) {
         if (result.getResultCode() != RESULT_OK) {
-            Toast.makeText(this, "Prise de photo annulée", Toast.LENGTH_LONG).show();
+            Toast.makeText(this, getString(R.string.cancelled_photo), Toast.LENGTH_LONG).show();
             return;
         }
         // There are no request codes
