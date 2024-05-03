@@ -4,11 +4,13 @@ import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.annotation.SuppressLint;
+import android.app.ProgressDialog;
 import android.content.Intent;
 import android.location.Location;
 import android.os.Bundle;
 import android.os.HandlerThread;
 import android.view.KeyEvent;
+import android.widget.ProgressBar;
 import android.widget.TextView;
 
 import com.google.android.gms.location.FusedLocationProviderClient;
@@ -54,6 +56,9 @@ public class GameStreetActivity extends AppCompatActivity implements OnStreetVie
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_game_street);
 
+        ProgressBar progressBar = findViewById(R.id.loading);
+        runOnUiThread(() -> progressBar.setVisibility(ProgressBar.VISIBLE));
+
         fusedLocationClient = LocationServices.getFusedLocationProviderClient(this);
 
         loadStreetViewFragment();
@@ -69,6 +74,12 @@ public class GameStreetActivity extends AppCompatActivity implements OnStreetVie
             @Override
             public void onLocationResult(@NonNull LocationResult locationResult) {
                 if ((locationResult.getLastLocation() != null) && (targetCoords != null)) {
+
+                    if(currentCoords == null) {
+                        ProgressBar progressBar = findViewById(R.id.loading);
+                        runOnUiThread(() -> progressBar.setVisibility(ProgressBar.INVISIBLE));
+                    }
+
                     currentCoords = new LatLng(
                             locationResult.getLastLocation().getLatitude(),
                             locationResult.getLastLocation().getLongitude()
@@ -142,8 +153,7 @@ public class GameStreetActivity extends AppCompatActivity implements OnStreetVie
         TextView timerTextView = findViewById(R.id.timerTextView);
         this.gameTimer = new ThreadedTimer(secondsRemaining ->
                 runOnUiThread(() ->
-                        timerTextView.setText(TimerUtils.formatTime(secondsRemaining)
-                        )
+                        timerTextView.setText(TimerUtils.formatTime(secondsRemaining))
                 )
         );
         this.gameTimer.start();

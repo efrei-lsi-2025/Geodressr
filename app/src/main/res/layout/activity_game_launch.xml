@@ -4,7 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="?attr/colorPrimaryFixed"
+    android:background="@color/primaryTransparent"
     tools:context=".GameLaunchActivity">
 
 
@@ -24,6 +24,7 @@
             android:layout_height="wrap_content"
             android:layout_marginBottom="64dp"
             android:indeterminate="true"
+            app:indicatorColor="@color/white"
             app:indicatorSize="64dp"
             app:showAnimationBehavior="inward"
             app:showDelay="@integer/material_motion_duration_medium_1" />
@@ -36,7 +37,7 @@
             android:layout_marginBottom="32dp"
             android:text="@string/recherche_zone"
             android:textAppearance="@style/TextAppearance.AppCompat.Large"
-            android:textColor="@color/black"
+            android:textColor="@color/white"
             tools:layout_editor_absoluteX="32dp"
             tools:layout_editor_absoluteY="547dp" />
     </LinearLayout>
