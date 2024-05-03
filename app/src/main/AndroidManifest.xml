@@ -21,13 +21,16 @@
         android:theme="@style/Theme.Geodressr">
         <activity
             android:name=".GameLeaderboardActivity"
+            android:screenOrientation="portrait"
             android:exported="false" />
         <activity
             android:name=".GamePhotoActivity"
+            android:screenOrientation="portrait"
             android:exported="false" />
         <activity
             android:name=".GameLaunchActivity"
             android:exported="false"
+            android:screenOrientation="portrait"
             android:noHistory="true" />
 
         <meta-data
