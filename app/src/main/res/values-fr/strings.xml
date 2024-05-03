@@ -1,6 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <string name="app_name">Geodressr</string>
     <string name="difficile">Difficile</string>
     <string name="moyen">Moyen</string>
     <string name="facile">Facile</string>
@@ -8,7 +7,6 @@
     <string name="emplacement_trouve">Emplacement trouvé en</string>
     <string name="minutes_placeholder">000min 99s</string>
     <string name="ajoutez_une_photo_btn">Ajoutez une photo de votre lieu</string>
-    <string name="three_dots">…</string>
     <string name="Save">Enregistrer</string>
     <string name="erreur_impossible_localiser">Erreur : impossible de localiser</string>
     <string name="c_est_parti">C\'est parti !</string>

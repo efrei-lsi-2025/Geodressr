@@ -1,5 +1,5 @@
 <resources>
-    <string name="app_name">Geodressr</string>
+    <string name="app_name" translatable="false">Geodressr</string>
     <string name="difficile">Difficult</string>
     <string name="moyen">Normal</string>
     <string name="facile">Easy</string>
@@ -8,7 +8,7 @@
     <string name="minutes_placeholder">000min 99s</string>
     <string name="add_new_photo">Add photo</string>
     <string name="photo_location_prefix">Photo taken at</string>
-    <string name="three_dots">…</string>
+    <string name="three_dots" translatable="false">…</string>
     <string name="Save">Save</string>
     <string name="erreur_impossible_localiser">Error: Unable to locate</string>
     <string name="c_est_parti">Here we go!</string>
