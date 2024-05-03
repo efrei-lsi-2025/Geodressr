@@ -97,4 +97,9 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
 
         startActivity(intent);
     }
+
+    public void openLeaderboard(View view) {
+        Intent intent = new Intent(this, GameLeaderboardActivity.class);
+        startActivity(intent);
+    }
 }

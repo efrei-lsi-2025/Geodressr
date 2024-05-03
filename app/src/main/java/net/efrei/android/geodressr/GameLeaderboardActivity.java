@@ -9,7 +9,7 @@ import net.efrei.android.geodressr.persistance.GameEntity;
 
 import java.util.List;
 
-public class GameLeaderboard extends AppCompatActivity {
+public class GameLeaderboardActivity extends AppCompatActivity {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -21,7 +21,7 @@ public class GameLeaderboard extends AppCompatActivity {
     private void updateLeaderboard() {
         try (EntityManager db = new EntityManager(this)) {
             List<GameEntity> entities = db.query(new GameEntity(), "ORDER BY playDate DESC");
-
+            System.out.println(entities);
         }
     }
 }

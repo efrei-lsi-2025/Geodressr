@@ -15,4 +15,5 @@
     <string name="ajoutez_une_photo_btn">Add a photo of your location</string>
     <string name="cancelled_photo">Photo taking cancelled</string>
     <string name="missing_camera_permission">Missing camera permission</string>
+    <string name="leaderboard">Leaderboard</string>
 </resources>

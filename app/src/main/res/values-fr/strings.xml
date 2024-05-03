@@ -14,4 +14,5 @@
     <string name="photo_location_prefix">Photo prise à</string>
     <string name="cancelled_photo">Prise de photo annulée</string>
     <string name="missing_camera_permission">Permission de la caméra manquante</string>
+    <string name="leaderboard">Classement</string>
 </resources>

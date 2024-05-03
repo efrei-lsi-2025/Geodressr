@@ -20,7 +20,7 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.Geodressr">
         <activity
-            android:name=".GameLeaderboard"
+            android:name=".GameLeaderboardActivity"
             android:exported="false" />
         <activity
             android:name=".GamePhotoActivity"
