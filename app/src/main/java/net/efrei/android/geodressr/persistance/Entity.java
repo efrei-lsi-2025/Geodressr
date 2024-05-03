@@ -3,6 +3,7 @@ package net.efrei.android.geodressr.persistance;
 import android.content.ContentValues;
 import android.database.Cursor;
 
+/** @noinspection SameReturnValue*/
 public interface Entity {
     /**
      * @return database table name

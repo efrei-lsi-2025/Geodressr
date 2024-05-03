@@ -32,6 +32,7 @@ public class EntityManager extends SQLiteOpenHelper {
         }
     }
 
+    /** @noinspection UnusedReturnValue*/
     public long save(Entity toSave) {
         SQLiteDatabase db = this.getWritableDatabase();
         return db.insert(toSave.tableName(), null, toSave.create());

@@ -92,6 +92,6 @@
             android:layout_height="wrap_content"
             android:text="Enregistrer"
             android:enabled="false"
-            android:onClick="onSavePhotoClick"/>
+            android:onClick="onSaveButtonClick"/>
     </LinearLayout>
 </androidx.constraintlayout.widget.ConstraintLayout>

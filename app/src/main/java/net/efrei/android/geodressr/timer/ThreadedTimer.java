@@ -1,9 +1,9 @@
 package net.efrei.android.geodressr.timer;
 
 public class ThreadedTimer {
-    private TimerEventListener listener;
+    private final TimerEventListener listener;
     private boolean running;
-    private long secondsElapsed;
+    private int secondsElapsed = 0;
 
     public ThreadedTimer(TimerEventListener listener) {
         this.listener = listener;
@@ -28,7 +28,7 @@ public class ThreadedTimer {
         running = false;
     }
 
-    public synchronized long getElapsedTime() {
+    public synchronized int getElapsedTime() {
         return this.secondsElapsed;
     }
 }

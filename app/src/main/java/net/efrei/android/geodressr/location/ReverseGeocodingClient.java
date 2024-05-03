@@ -9,7 +9,7 @@ import java.util.Locale;
 public class ReverseGeocodingClient {
     private static final String ApiEndpoint = "https://shinprog-geocoding.deno.dev/get-city/";
 
-    String apiUrl;
+    final String apiUrl;
     public ReverseGeocodingClient(double lat, double lon, String key) {
         this.apiUrl = String.format(Locale.US, "%s?lat=%f&lon=%f&key=%s", ApiEndpoint, lat, lon, key);
     }

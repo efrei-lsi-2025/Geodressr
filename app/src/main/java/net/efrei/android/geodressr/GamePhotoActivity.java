@@ -87,17 +87,22 @@ public class GamePhotoActivity extends AppCompatActivity {
         }
     }
 
-    public void onSavePhotoClick(View view) {
+    public void onSaveButtonClick(View view) {
         GameEntity game = new GameEntity()
                 .setLocation(this.lat, this.lon)
                 .setDuration(this.timeSpent)
                 .setCityName(this.cityName)
                 .setPhoto(this.cam_uri.toString());
-        EntityManager db = new EntityManager(this);
-        db.save(game);
 
-        List<GameEntity> entities = db.query(game, "");
+        try (EntityManager db = new EntityManager(this)) {
+            db.save(game);
 
+            List<GameEntity> entities = db.query(game, "");
+            String result = entities.toString();
+            System.out.println(result);
+        }
+
+        this.finish();
     }
 
     private void handlePhotoReceived(ActivityResult result) {

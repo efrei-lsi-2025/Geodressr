@@ -7,9 +7,8 @@ import android.annotation.SuppressLint;
 import android.content.Intent;
 import android.location.Location;
 import android.os.Bundle;
-import android.os.Handler;
 import android.os.HandlerThread;
-import android.os.Looper;
+import android.view.KeyEvent;
 import android.widget.TextView;
 
 import com.google.android.gms.location.FusedLocationProviderClient;
@@ -32,15 +31,11 @@ import net.efrei.android.geodressr.timer.TimerUtils;
 /**
  * Etape 2 du jeu : le streetview
  * Affiche la streetview, le temps passé et la distance estimée dynamique du lieu à trouver.
- *
  * Paramètres :
  * - targetCoordsLongitude : longitude du lieu à trouver (avant correction du StreetView)
  * - targetCoordsLatitude : latitude du lieu à trouver (avant correction du StreetView)
  */
 public class GameStreetActivity extends AppCompatActivity implements OnStreetViewPanoramaReadyCallback {
-    /** inhibe la condition de win */
-    private boolean isLogan = false;
-
     private ThreadedTimer gameTimer;
 
     private LocationCallback fusedTrackerCallback;
@@ -88,15 +83,10 @@ public class GameStreetActivity extends AppCompatActivity implements OnStreetVie
                             distance
                     );
 
-                    System.out.println("DISTANCE: " + distance[0]);
-                    System.out.println("TARGET: " + targetCoords.latitude + "|" + targetCoords.longitude);
-                    System.out.println("LOCATION: " + currentCoords.latitude + "|" + currentCoords.longitude);
-                    System.out.println("ACCURACY: " + locationResult.getLastLocation().getAccuracy());
-
                     TextView distanceTextView = findViewById(R.id.distanceTextView);
                     runOnUiThread(() -> distanceTextView.setText(String.format("%dm", (int) distance[0])));
 
-                    if (distance[0] < locationResult.getLastLocation().getAccuracy() || isLogan) {
+                    if (distance[0] < 50 + locationResult.getLastLocation().getAccuracy()) {
                         onWinGame();
                     }
                 }
@@ -159,14 +149,24 @@ public class GameStreetActivity extends AppCompatActivity implements OnStreetVie
         this.gameTimer.start();
     }
 
+    @Override
+    public boolean onKeyDown(int keyCode, KeyEvent event) {
+        if ((keyCode == KeyEvent.KEYCODE_VOLUME_UP)){
+            // CHEAT mode pour Logan
+            onWinGame();
+        }
+        return true;
+    }
+
     private void onWinGame() {
-        long timeSpent = this.gameTimer.getElapsedTime();
+        int timeSpent = this.gameTimer.getElapsedTime();
 
         Intent intent = new Intent(this, GamePhotoActivity.class);
         intent.putExtra("timeSpent", timeSpent);
         intent.putExtra("positionLatitude", currentCoords.latitude);
         intent.putExtra("positionLongitude", currentCoords.longitude);
         startActivity(intent);
+        this.finish();
     }
 
     @Override

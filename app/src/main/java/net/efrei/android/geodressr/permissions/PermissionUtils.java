@@ -1,7 +1,5 @@
 package net.efrei.android.geodressr.permissions;
 
-import static androidx.core.content.PermissionChecker.checkSelfPermission;
-
 import android.Manifest;
 import android.content.pm.PackageManager;
 
